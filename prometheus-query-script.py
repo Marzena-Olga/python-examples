@@ -103,8 +103,8 @@ def prepare_jira_json(key, table_dict, project):  # function prepare jira json w
     print('Tables:')
     print(final_description)
 
-    assignee = 'JIRAUSER108403'
-    a_name = 'gdn_cms_ops'
+    assignee = 'JIRAUSER01'
+    a_name = 'jira_user'
     # print(assignee)
     if project.find('project-string1') != -1:
         assignee = 'jirauser1'  
