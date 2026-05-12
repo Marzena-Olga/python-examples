@@ -1,0 +1,12 @@
+[Unit]
+Description=File Sync Service
+After=network.target
+
+[Service]
+Type=idle
+Restart=on-failure
+User=root
+ExecStart=/usr/bin/python3.11 file-sync.py --src_path <source_path> --des_path <dest_path>
+
+[Install]
+WantedBy=multi-user.target
