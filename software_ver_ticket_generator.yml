@@ -1,0 +1,273 @@
+# This pipeline prepare tickets on Jira from Prometheus metrics.
+
+trigger: none
+#- master
+
+schedules:
+  - cron: '0 7 15 * *' # mm HH DD MM DW
+    displayName: monthly run
+    branches:
+      include:
+        - master
+    always: true
+
+
+#pool:
+  #name: EXAMPLE-AGENT-POOL-1
+
+variables:
+- group: Jira_Creds
+- group: Prometheus_creds
+
+stages: 
+  - stage: PromToJira_CLIENT_A_TEST
+    displayName: 'CLIENT_A_TEST - Run Prometheus query and create JIRA ticket'
+    dependsOn: []
+    jobs:
+    - job: _CLIENT_A_TEST_RunPythonScript
+      pool:
+        name: EXAMPLE-AGENT-POOL-1
+      strategy:
+        matrix:
+          Python311_NONPROD:
+            python.version: '3.11'
+      steps:
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: '$(python.version)'
+        displayName: 'Use Python $(python.version)'
+      - script: |
+          python -m pip install --upgrade pip
+          python -m venv ./venv
+          source ./venv/bin/activate
+          python -m pip install -r ./prometheus2jira/requirements.txt -U --upgrade-strategy eager
+          python3 ./prometheus2jira/software_ver_ticket_generator.py --token=$(JIRA_TOKEN) --url='https://host09.example.com:8443/' --login='admin' --project='(CLIENT_A-TEST)' --password=$(CLIENT_A-TEST) --smtp_pass=$(SMTP-PASS)
+          #python3 --version
+        displayName: 'CLIENT_A_TEST Prometheus to Jira non-production env task creator CLIENT_A_TEST'
+
+
+  - stage: PromToJira_CLIENT_B_TEST
+    displayName: 'CLIENT_B_TEST - Run Prometheus query and create JIRA ticket'
+    dependsOn: []
+    jobs:
+    - job: RunPythonScript
+      pool:
+        name: EXAMPLE-AGENT-POOL-1
+      strategy:
+        matrix:
+          Python311_NONPROD:
+            python.version: '3.11'
+      steps:
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: '$(python.version)'
+        displayName: 'Use Python $(python.version)'
+      - script: |
+          python -m pip install --upgrade pip
+          python -m venv ./venv
+          source ./venv/bin/activate
+          python -m pip install -r ./prometheus2jira/requirements.txt -U --upgrade-strategy eager
+          python3 ./prometheus2jira/software_ver_ticket_generator.py --token=$(JIRA_TOKEN) --url='https://host08.example.com:8443/' --login='admin' --project='(CLIENT_B-TEST)' --password=$(CLIENT_B-TEST) --smtp_pass=$(SMTP-PASS)
+          #python3 --version
+        displayName: 'CLIENT_B_TEST Prometheus to Jira non-production env task creator'
+
+  - stage: PromToJira_CLIENT_C_UAT
+    displayName: 'CLIENT_C_UAT - Run Prometheus query and create JIRA ticket'
+    dependsOn: []
+    jobs:
+    - job: RunPythonScript
+      pool:
+        name: EXAMPLE-AGENT-POOL-1
+      strategy:
+        matrix:
+          Python311_NONPROD:
+            python.version: '3.11'
+      steps:
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: '$(python.version)'
+        displayName: 'Use Python $(python.version)'
+      - script: |
+          python -m pip install --upgrade pip
+          python -m venv ./venv
+          source ./venv/bin/activate
+          python -m pip install -r ./prometheus2jira/requirements.txt -U --upgrade-strategy eager
+          python3 ./prometheus2jira/software_ver_ticket_generator.py --token=$(JIRA_TOKEN) --url='https://host06.example.com:8443/' --login='admin' --project='(CLIENT_C-UAT)' --password=$(CLIENT_C-UAT) --smtp_pass=$(SMTP-PASS)
+          #python3 --version
+        displayName: 'CLIENT_C_UAT Prometheus to Jira non-production env task creator'
+
+  - stage: PromToJira_CLIENT_C_PDT
+    displayName: 'CLIENT_C_PDT - Run Prometheus query and create JIRA ticket'
+    dependsOn: []
+    jobs:
+    - job: RunPythonScript
+      pool:
+        name: EXAMPLE-AGENT-POOL-1
+      strategy:
+        matrix:
+          Python311_NONPROD:
+            python.version: '3.11'
+      steps:
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: '$(python.version)'
+        displayName: 'Use Python $(python.version)'
+      - script: |
+          python -m pip install --upgrade pip
+          python -m venv ./venv
+          source ./venv/bin/activate
+          python -m pip install -r ./prometheus2jira/requirements.txt -U --upgrade-strategy eager
+          python3 ./prometheus2jira/software_ver_ticket_generator.py --token=$(JIRA_TOKEN) --url='https://host05.example.com:8443/' --login='admin' --project='(CLIENT_C-PDT)' --password=$(CLIENT_C-PDT) --smtp_pass=$(SMTP-PASS)
+          #python3 --version
+        displayName: 'CLIENT_C_PDT Prometheus to Jira non-production env task creator'
+
+  - stage: PromToJira_CLIENT_D_UAT
+    displayName: 'CLIENT_D_UAT - Run Prometheus query and create JIRA ticket'
+    dependsOn: []
+    jobs:
+    - job: RunPythonScript
+      pool:
+        name: EXAMPLE-AGENT-POOL-1
+      strategy:
+        matrix:
+          Python311_NONPROD:
+            python.version: '3.11'
+      steps:
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: '$(python.version)'
+        displayName: 'Use Python $(python.version)'
+      - script: |
+          python -m pip install --upgrade pip
+          python -m venv ./venv
+          source ./venv/bin/activate
+          python -m pip install -r ./prometheus2jira/requirements.txt -U --upgrade-strategy eager
+          python3 ./prometheus2jira/software_ver_ticket_generator.py --token=$(JIRA_TOKEN) --url='https://host03.example.com:8443/' --login='admin' --project='(CLIENT_D-UAT)' --password=$(CLIENT_D-UAT) --smtp_pass=$(SMTP-PASS)
+          #python3 --version
+        displayName: 'CLIENT_D_UAT Prometheus to Jira non-production env task creator'
+
+  - stage: PromToJira_CLIENT_C_PRF
+    displayName: 'CLIENT_C_PRF - Run Prometheus query and create JIRA ticket'
+    dependsOn: []
+    jobs:
+    - job: RunPythonScript
+      pool:
+        name: EXAMPLE-AGENT-POOL-1
+      strategy:
+        matrix:
+          Python311_NONPROD:
+            python.version: '3.11'
+      steps:
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: '$(python.version)'
+        displayName: 'Use Python $(python.version)'
+      - script: |
+          python -m pip install --upgrade pip
+          python -m venv ./venv
+          source ./venv/bin/activate
+          python -m pip install -r ./prometheus2jira/requirements.txt -U --upgrade-strategy eager
+          python3 ./prometheus2jira/software_ver_ticket_generator.py --token=$(JIRA_TOKEN) --url='https://host04.example.com:8443/' --login='monitoring-user' --project='(CLIENT_C-PRF)' --password=$(CLIENT_C-PRF) --smtp_pass=$(SMTP-PASS)
+          #python3 --version
+        displayName: 'CLIENT_C_PRF Prometheus to Jira non-production env task creator'
+
+  - stage: PromToJira_CLIENT_A_PRD
+    displayName: 'CLIENT_A_PRD - Run Prometheus query and create JIRA ticket'
+    dependsOn: []
+    jobs:
+    - job: _CLIENT_A_PRD_RunPythonScript
+      pool:
+        name: EXAMPLE-AGENT-POOL-2
+      strategy:
+        matrix:
+          Python311_PROD:
+            python.version: '3.11'
+      steps:
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: '$(python.version)'
+        displayName: 'Use Python $(python.version)'
+      - script: |
+          python -m pip install --upgrade pip
+          python -m venv ./venv
+          source ./venv/bin/activate
+          python -m pip install -r ./prometheus2jira/requirements.txt -U --upgrade-strategy eager
+          python3 ./prometheus2jira/software_ver_ticket_generator.py --token=$(JIRA_TOKEN) --url='https://host10.example.com:8443/' --login='admin' --project='(CLIENT_A-PRD)' --password=$(CLIENT_A-PRD) --smtp_pass=$(SMTP-PASS)
+          #python3 --version
+        displayName: CLIENT_A_PRD 'Prometheus to Jira production env task creator'
+
+  - stage: PromToJira_CLIENT_B_PRD
+    displayName: 'CLIENT_B_PRD - Run Prometheus query and create JIRA ticket'
+    dependsOn: []
+    jobs:
+    - job: CLIENT_B_PRD_RunPythonScript
+      pool:
+        name: EXAMPLE-AGENT-POOL-2
+      strategy:
+        matrix:
+          Python311_PROD:
+            python.version: '3.11'
+      steps:
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: '$(python.version)'
+        displayName: 'Use Python $(python.version)'
+      - script: |
+          python -m pip install --upgrade pip
+          python -m venv ./venv
+          source ./venv/bin/activate
+          python -m pip install -r ./prometheus2jira/requirements.txt -U --upgrade-strategy eager
+          python3 ./prometheus2jira/software_ver_ticket_generator.py --token=$(JIRA_TOKEN) --url='https://host07.example.com:8443/' --login='admin' --project='(CLIENT_B-PRD)' --password=$(CLIENT_B-PRD) --smtp_pass=$(SMTP-PASS)
+          #python3 --version
+        displayName: 'CLIENT_B_PRD Prometheus to Jira production env task creator'
+
+  - stage: PromToJira_CLIENT_D_PRD
+    displayName: 'CLIENT_D_PRD - Run Prometheus query and create JIRA ticket'
+    dependsOn: []
+    jobs:
+    - job: CLIENT_D_PRD_RunPythonScript
+      pool:
+        name: EXAMPLE-AGENT-POOL-2
+      strategy:
+        matrix:
+          Python311_PROD:
+            python.version: '3.11'
+      steps:
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: '$(python.version)'
+        displayName: 'Use Python $(python.version)'
+      - script: |
+          python -m pip install --upgrade pip
+          python -m venv ./venv
+          source ./venv/bin/activate
+          python -m pip install -r ./prometheus2jira/requirements.txt -U --upgrade-strategy eager
+          python3 ./prometheus2jira/software_ver_ticket_generator.py --token=$(JIRA_TOKEN) --url='https://host02.example.com:8443/' --login='admin' --project='(CLIENT_D-PRD)' --password=$(CLIENT_D-PRD) --smtp_pass=$(SMTP-PASS)
+          #python3 --version
+        displayName: 'CLIENT_D_PRD Prometheus to Jira production env task creator'
+
+  - stage: PromToJira_CLIENT_C_PRD
+    displayName: 'CLIENT_C_PRD - Run Prometheus query and create JIRA ticket'
+    dependsOn: []
+    jobs:
+    - job: RunPythonScript
+      pool:
+        name: EXAMPLE-AGENT-POOL-2
+      strategy:
+        matrix:
+          Python311_PROD:
+            python.version: '3.11'
+      steps:
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: '$(python.version)'
+        displayName: 'Use Python $(python.version)'
+      - script: |
+          python -m pip install --upgrade pip
+          python -m venv ./venv
+          source ./venv/bin/activate
+          python -m pip install -r ./prometheus2jira/requirements.txt -U --upgrade-strategy eager
+          python3 ./prometheus2jira/software_ver_ticket_generator.py --token=$(JIRA_TOKEN) --url='https://host01.example.com/' --login='admin' --project='(CLIENT_C-PRD)' --password=$(CLIENT_C-PRD) --smtp_pass=$(SMTP-PASS)
+          #python3 --version
+        displayName: 'CLIENT_C_PRD Prometheus to Jira production env task creator'
+            
